@@ -13,13 +13,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", jwtToken);
   };
 
-  const onLOgout = () => {
+  const onLogout = () => {
     setUserData(null);
     setToken(null);
     localStorage.removeItem("token");
   };
   return (
-    <AuthContext.Provider value={{ userData, token, onLogin, onLOgout }}>
+    <AuthContext.Provider value={{ userData, token, onLogin, onLogout }}>
       {children}
     </AuthContext.Provider>
   );

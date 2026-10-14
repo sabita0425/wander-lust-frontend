@@ -1,12 +1,37 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import TripForm from "./components/common/TripForm";
+import useAuth from "./hooks/useAuth";
+import { jwtDecode } from "jwt-decode";
+import AppLayout from "./layouts/AppLayout";
 
 const App = () => {
+  const { token, onLogout } = useAuth();
+
+  const ProtectedRoutes = () => {
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken.userId;
+
+    if (!token || !userId) {
+      onLogout();
+      return <Navigate to="/login" />;
+    }
+
+    if (decodedToken && decodedToken.exp) {
+      const currentDate = Date.now() / 1000;
+
+      if (currentDate > decodedToken.exp) {
+        onLogout();
+        return <Navigate to="/login" />;
+      }
+    }
+
+    return <AppLayout />;
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -15,10 +40,10 @@ const App = () => {
 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/tripform" element={<TripForm />} />
+
+        <Route element={<ProtectedRoutes />}></Route>
       </Routes>
     </BrowserRouter>
   );
 };
-
 export default App;

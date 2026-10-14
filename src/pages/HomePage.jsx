@@ -4,7 +4,6 @@ import Hero from "../components/homeComponents/Hero";
 import Features from "../components/homeComponents/Features";
 import AboutUs from "../components/homeComponents/AboutUs";
 import Reviews from "../components/homeComponents/Reviews";
-import TripForm from "../components/common/TripForm";
 
 const HomePage = () => {
   return (
